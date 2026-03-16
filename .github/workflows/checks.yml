@@ -1,0 +1,50 @@
+name: Code checks
+
+on:
+  pull_request:
+    branches:
+      - main
+      - stable
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    services:
+      mysql-service:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: db_test
+        ports:
+          - 33306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo, pdo_mysql, zip
+      - name: Copy environment variables
+        run: php -r "file_exists('workbench/.env') || copy('workbench/.env.example', 'workbench/.env');" || echo "No .env.example"
+      - name: Update .env file
+        run: |
+          mkdir -p workbench
+          echo "DB_CONNECTION=mysql" >> workbench/.env
+          echo "DB_HOST=127.0.0.1" >> workbench/.env
+          echo "DB_PORT=33306" >> workbench/.env
+          echo "DB_DATABASE=db_test" >> workbench/.env
+          echo "DB_USERNAME=root" >> workbench/.env
+          echo "DB_PASSWORD=password" >> workbench/.env
+          echo "APP_ENV=testing" >> workbench/.env
+      - name: Install dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      - name: Run tests
+        run: vendor/bin/testbench package:test
+      - name: Run linter test
+        run: composer pint:test

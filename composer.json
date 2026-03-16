@@ -1,0 +1,79 @@
+{
+  "name": "whilesmart/eloquent-projects",
+  "description": "Polymorphic project and version management package for Laravel applications",
+  "package-version": "1.0.0",
+  "keywords": [
+    "laravel",
+    "projects",
+    "versions",
+    "eloquent",
+    "php",
+    "package"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Whilesmart Team"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "laravel/framework": "^10.0|^11.0|^12.0"
+  },
+  "require-dev": {
+    "fakerphp/faker": "^1.24",
+    "laravel/pint": "^1.25",
+    "orchestra/testbench": "^8.0|^9.0|^10.0",
+    "phpunit/phpunit": "^10.0|^11.0"
+  },
+  "suggest": {
+    "whilesmart/eloquent-roles": "For permission-based project management",
+    "whilesmart/eloquent-workspaces": "For workspace-scoped projects",
+    "whilesmart/eloquent-taxonomy": "For tagging and categorizing projects"
+  },
+  "autoload": {
+    "psr-4": {
+      "Whilesmart\\Projects\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Whilesmart\\Projects\\Tests\\": "tests/",
+      "Workbench\\App\\": "workbench/app/",
+      "Workbench\\Database\\Factories\\": "workbench/database/factories/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Whilesmart\\Projects\\ProjectsServiceProvider"
+      ]
+    }
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "@clear",
+      "@prepare"
+    ],
+    "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+    "prepare": "@php vendor/bin/testbench package:discover --ansi",
+    "build": "@php vendor/bin/testbench workbench:build --ansi",
+    "serve": [
+      "Composer\\Config::disableProcessTimeout",
+      "@build",
+      "@php vendor/bin/testbench serve --ansi"
+    ],
+    "pint": [
+      "./vendor/bin/pint"
+    ],
+    "pint:test": [
+      "./vendor/bin/pint --test"
+    ]
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
