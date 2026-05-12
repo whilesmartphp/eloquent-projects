@@ -2,7 +2,7 @@
 
 All notable changes to `eloquent-projects` will be documented in this file.
 
-## [1.0.0] - 2026-03-16
+## [1.0.0] - 2026-05-12
 
 ### Added
 - Initial release
